@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Card TCG - Ruleta Élite</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="tcg-background">
+        <div class="energy-stream red"></div>
+        <div class="energy-stream blue"></div>
+        <div class="overlay"></div>
+    </div>
+
+    <div class="main-interface">
+        <header>
+            <img src="logo.png" alt="World Card TCG Logo" class="main-logo">
+        </header>
+
+        <div class="control-panel">
+            <div class="input-section tc-panel">
+                <h3><span class="pokeball-icon"></span> PARTICIPANTES</h3>
+                <textarea id="participants" placeholder="Escribe un nombre por línea..."></textarea>
+                <div class="counter">Total: <span id="participantCount">0</span></div>
+            </div>
+
+            <div class="wheel-section">
+                <div class="pointer">▼</div>
+                <div class="wheel-outer-ring">
+                    <canvas id="wheel" width="500" height="500"></canvas>
+                    <div class="wheel-center-cap"></div>
+                </div>
+            </div>
+
+            <div class="action-section tc-panel">
+                <div class="speed-control">
+                    <label>FUERZA DE GIRO:</label>
+                    <input type="range" id="speed" min="20" max="70" value="45">
+                </div>
+                <button id="spinBtn">¡GIRAR RULETA!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="winnerModal" class="modal">
+        <div class="pack-opening-container">
+            <div class="card-pack" id="cardPack">
+                <div class="pack-label">WORLDCARD TCG</div>
+                <div class="pack-instruction">¡HAZ CLICK PARA ABRIR!</div>
+            </div>
+            <div class="revealed-card" id="revealedCard">
+                <div class="card-rarity-glitter"></div>
+                <div class="card-header">CARTA DE GANADOR</div>
+                <div class="card-art">
+                    <img src="logo.png" alt="Winner Logo">
+                </div>
+                <div id="winnerName" class="winner-display">NOMBRE</div>
+                <div class="card-footer">ENHORABUENA ENTRENADOR!</div>
+                <button class="close-btn" onclick="closeModal()">ACEPTAR</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
