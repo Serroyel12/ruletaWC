@@ -136,3 +136,54 @@ textarea {
     margin-top: auto; padding: 10px 20px; background: #222; color: white;
     border: none; border-radius: 5px; cursor: pointer;
 }
+/* --- AJUSTES PARA MÓVILES --- */
+
+/* Hacer que el canvas sea flexible */
+#wheel {
+    width: 100%;
+    max-width: 500px; /* Tamaño máximo en PC */
+    height: auto;
+}
+
+@media (max-width: 900px) {
+    body {
+        overflow-y: auto; /* Permitir scroll en móviles */
+        height: auto;
+    }
+
+    .main-interface {
+        padding: 10px;
+        height: auto;
+    }
+
+    .control-panel {
+        display: flex;
+        flex-direction: column; /* Apilar elementos uno encima de otro */
+        gap: 20px;
+        width: 100%;
+    }
+
+    .input-section, .action-section {
+        order: 2; /* Poner controles abajo de la ruleta */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .wheel-section {
+        order: 1; /* Poner la ruleta arriba */
+        width: 100%;
+    }
+
+    .main-logo {
+        height: 100px; /* Logo más pequeño en móvil */
+    }
+
+    .pack-opening-container {
+        width: 90%; /* El sobre ocupa el ancho del móvil */
+        height: 400px;
+    }
+    
+    .winner-display {
+        font-size: 24px;
+    }
+}
