@@ -6,13 +6,15 @@
     --tcg-dark: #121212;
 }
 
+/* Permitir scroll en móvil para que no se corte el contenido */
 body, html {
     margin: 0; padding: 0;
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Arial Black', sans-serif;
     background-color: var(--tcg-dark);
     color: white;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Fondo Animado */
@@ -30,160 +32,200 @@ body, html {
 
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* Layout */
+/* Layout Principal */
 .main-interface {
-    display: flex; flex-direction: column; align-items: center; padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* --- CAMBIO: LOGO PRINCIPAL MÁS GRANDE --- */
 .main-logo { 
-    height: 150px; /* Aumentado de 100px a 150px */
-    margin-bottom: 30px; /* Un poco más de espacio */
-    filter: drop-shadow(0 0 15px var(--pokeyellow)); /* Brillo más intenso */
+    height: auto;
+    width: 80%;
+    max-width: 300px; /* Logo grande en PC, adaptado en móvil */
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px var(--pokeyellow));
 }
 
+/* Grid adaptable: 3 columnas en PC, 1 en Móvil */
 .control-panel {
-    display: grid; grid-template-columns: 280px 1fr 280px; gap: 20px;
-    width: 95%; max-width: 1200px; align-items: center;
+    display: grid;
+    grid-template-columns: 1fr; /* Por defecto 1 columna (móvil) */
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+@media (min-width: 900px) {
+    .control-panel {
+        grid-template-columns: 280px 1fr 280px; /* 3 columnas en PC */
+        align-items: center;
+    }
 }
 
 .tc-panel {
-    background: rgba(30, 30, 30, 0.9); border: 3px solid var(--tcg-gold);
-    border-radius: 15px; padding: 15px; box-shadow: 0 0 20px black;
+    background: rgba(30, 30, 30, 0.9);
+    border: 3px solid var(--tcg-gold);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 0 20px black;
+    box-sizing: border-box;
 }
 
 textarea {
-    width: 100%; height: 200px; background: #000; color: #0f0;
-    border: 1px solid #333; border-radius: 5px; box-sizing: border-box; padding: 10px;
+    width: 100%;
+    height: 150px;
+    background: #000;
+    color: #0f0;
+    border: 1px solid #333;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: monospace;
 }
 
-/* Ruleta */
-.wheel-section { position: relative; display: flex; justify-content: center; }
+/* Ruleta Responsiva */
+.wheel-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
 .pointer {
-    position: absolute; top: -20px; z-index: 10; font-size: 40px;
-    color: var(--pokeyellow); text-shadow: 0 0 10px black;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-size: 40px;
+    color: var(--pokeyellow);
+    text-shadow: 0 0 10px black;
 }
 
 .wheel-outer-ring {
-    padding: 10px; background: #222; border-radius: 50%;
-    border: 5px solid var(--tcg-gold); box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Mantiene el círculo perfecto */
+    padding: 10px;
+    background: #222;
+    border-radius: 50%;
+    border: 5px solid var(--tcg-gold);
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
     position: relative;
+    box-sizing: border-box;
+}
+
+#wheel {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
 }
 
 .wheel-center-cap {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 60px; height: 60px; background: white; border-radius: 50%;
-    border: 5px solid #222; z-index: 5;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15%; height: 15%; /* Proporcional al tamaño de la ruleta */
+    background: white;
+    border-radius: 50%;
+    border: 4px solid #222;
+    z-index: 5;
 }
 
-/* Botón */
+/* Botón y Controles */
 #spinBtn {
-    width: 100%; padding: 15px; background: var(--pokered); color: white;
-    border: none; border-radius: 50px; font-weight: bold; cursor: pointer;
-    box-shadow: 0 5px 0 #800000; margin-top: 10px;
+    width: 100%;
+    padding: 15px;
+    background: var(--pokered);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #800000;
+    margin-top: 10px;
 }
-#spinBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 #800000; }
 
-/* MODAL Y CARTA */
+#spinBtn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #800000;
+}
+
+/* Modal y Ganador */
 .modal {
-    display: none; position: fixed; z-index: 100; left: 0; top: 0;
-    width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-    justify-content: center; align-items: center; backdrop-filter: blur(10px);
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
 }
 
-.pack-opening-container { width: 320px; height: 450px; perspective: 1000px; }
+.pack-opening-container {
+    width: 90%;
+    max-width: 320px;
+    height: 450px;
+    perspective: 1000px;
+}
 
 .card-pack {
-    width: 100%; height: 100%; background: var(--pokered);
-    border: 5px solid var(--pokeyellow); border-radius: 15px;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    cursor: pointer; transition: 0.5s;
+    width: 100%; height: 100%;
+    background: var(--pokered);
+    border: 5px solid var(--pokeyellow);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
-.pack-label { font-size: 20px; border: 2px solid white; padding: 10px; }
-.pack-instruction { margin-top: 20px; font-size: 12px; animation: blink 1s infinite; }
-
-@keyframes blink { 50% { opacity: 0; } }
-
-.card-pack.ripping { transform: scale(1.2) rotate(10deg); opacity: 0; }
 
 .revealed-card {
-    display: none; width: 100%; height: 100%; background: white;
-    border: 8px solid var(--tcg-gold); border-radius: 15px;
-    flex-direction: column; align-items: center; padding: 15px;
-    box-sizing: border-box; color: black; position: relative;
-    animation: reveal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: none;
+    width: 100%; height: 100%;
+    background: white;
+    border: 8px solid var(--tcg-gold);
+    border-radius: 15px;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    box-sizing: border-box;
+    color: black;
 }
 
-@keyframes reveal { from { transform: scale(0); } to { transform: scale(1); } }
-
-.card-header { font-size: 14px; font-weight: bold; color: #444; }
-
-/* --- CAMBIO: LOGO DENTRO DE LA CARTA MÁS GRANDE --- */
 .card-art {
-    width: 100%; height: 180px; background: #3d7dca; margin: 10px 0;
-    border: 3px solid #000; display: flex; justify-content: center; align-items: center;
-    overflow: visible; /* Permitir que el logo sobresalga si es necesario */
-}
-.card-art img { 
-    max-width: 95%; /* Aumentado de 80% a 95% */
-    max-height: 95%; /* Aumentado de 80% a 95% */
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
-}
-
-.winner-display { font-size: 32px; font-weight: 900; text-align: center; margin: 10px 0; }
-
-.close-btn {
-    margin-top: auto; padding: 10px 20px; background: #222; color: white;
-    border: none; border-radius: 5px; cursor: pointer;
-}
-/* --- AJUSTES PARA MÓVILES --- */
-
-/* Hacer que el canvas sea flexible */
-#wheel {
-    width: 100%;
-    max-width: 500px; /* Tamaño máximo en PC */
-    height: auto;
+    width: 100%; height: 180px;
+    background: #3d7dca;
+    margin: 10px 0;
+    border: 3px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-@media (max-width: 900px) {
-    body {
-        overflow-y: auto; /* Permitir scroll en móviles */
-        height: auto;
-    }
+.card-art img {
+    max-width: 90%;
+    max-height: 90%;
+}
 
-    .main-interface {
-        padding: 10px;
-        height: auto;
-    }
+.winner-display {
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-align: center;
+    margin: 10px 0;
+    word-wrap: break-word;
+}
 
-    .control-panel {
-        display: flex;
-        flex-direction: column; /* Apilar elementos uno encima de otro */
-        gap: 20px;
-        width: 100%;
-    }
-
-    .input-section, .action-section {
-        order: 2; /* Poner controles abajo de la ruleta */
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .wheel-section {
-        order: 1; /* Poner la ruleta arriba */
-        width: 100%;
-    }
-
-    .main-logo {
-        height: 100px; /* Logo más pequeño en móvil */
-    }
-
-    .pack-opening-container {
-        width: 90%; /* El sobre ocupa el ancho del móvil */
-        height: 400px;
-    }
-    
-    .winner-display {
-        font-size: 24px;
-    }
+@media (max-width: 480px) {
+    .main-logo { height: 100px; }
+    .winner-display { font-size: 1.5rem; }
 }

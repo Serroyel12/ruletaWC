@@ -15,18 +15,22 @@ let isSpinning = false;
 
 const colors = ["#dc0a2d", "#3d7dca", "#ffcb05", "#47a049", "#9b59b6", "#f39c12"];
 
-// --- 1. FUNCIÓN PARA ADAPTAR EL TAMAÑO (RESPONSIVE) ---
+// --- AJUSTE RESPONSIVE FORZADO ---
 function resizeCanvas() {
-    // Calculamos el tamaño basado en el contenedor o la pantalla
-    const containerWidth = canvas.parentElement.clientWidth;
-    const size = Math.min(containerWidth, 500); // Máximo 500px, o el ancho del móvil
+    // Buscamos el ancho del contenedor padre
+    const parent = canvas.parentElement;
+    const size = Math.min(parent.offsetWidth, 500); 
     
-    canvas.width = size;
-    canvas.height = size;
-    draw(); // Redibujar siempre que cambie el tamaño
+    if (size > 0) {
+        canvas.width = size;
+        canvas.height = size;
+        draw();
+    }
 }
 
+// Escuchar cambios de tamaño y rotación de móvil
 window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', resizeCanvas);
 
 function updateWheel() {
     names = participantsInput.value.split('\n').filter(n => n.trim() !== "");
@@ -34,15 +38,12 @@ function updateWheel() {
     draw();
 }
 
-// --- 2. FUNCIÓN DE DIBUJO DINÁMICO ---
 function draw() {
     const list = names.length > 0 ? names : ["AÑADE NOMBRES"];
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    
-    // El radio se adapta al tamaño del canvas (dejando margen para el borde)
-    const outerRadius = (canvas.width / 2) - 10;
-    const textRadius = outerRadius * 0.7; // El texto se posiciona al 70% del radio
+    const outerRadius = (canvas.width / 2) - 15;
+    const textRadius = outerRadius * 0.7;
     
     arc = Math.PI / (list.length / 2);
 
@@ -69,27 +70,22 @@ function draw() {
         ctx.shadowColor = "black";
         ctx.shadowBlur = 4;
         
-        // Fuente responsiva: el tamaño cambia según el diámetro de la ruleta
-        const fontSize = Math.max(10, outerRadius / 15);
+        const fontSize = Math.max(12, outerRadius / 12);
         ctx.font = `bold ${fontSize}px sans-serif`;
         
-        const txt = name.length > 15 ? name.substring(0, 12) + ".." : name;
+        const txt = name.length > 12 ? name.substring(0, 10) + ".." : name;
         ctx.fillText(txt, -ctx.measureText(txt).width / 2, 0);
         ctx.restore();
     });
 }
 
-// --- 3. LÓGICA DE GIRO CON FUERZA ---
 function spin() {
     if (isSpinning || names.length === 0) return;
     isSpinning = true;
     spinBtn.disabled = true;
 
     const force = parseInt(speedInput.value); 
-    // Velocidad inicial proporcional a la fuerza
     let velocity = (force / 100) + (Math.random() * 0.1); 
-    
-    // Fricción constante para un frenado natural
     const friction = 0.985 + (Math.random() * 0.005); 
 
     function animate() {
@@ -99,14 +95,11 @@ function spin() {
             determineWinner();
             return;
         }
-
         velocity *= friction;
         startAngle += velocity;
-        
         draw();
         requestAnimationFrame(animate);
     }
-    
     animate();
 }
 
@@ -115,7 +108,6 @@ function determineWinner() {
     const arcd = arc * 180 / Math.PI;
     const index = Math.floor((360 - (degrees % 360)) / arcd) % names.length;
     const winner = names[index >= 0 ? index : 0];
-    
     showWinnerModal(winner);
 }
 
@@ -139,9 +131,11 @@ function closeModal() {
     winnerModal.style.display = 'none';
 }
 
-// Listeners
+// --- INICIALIZACIÓN SEGURA ---
+document.addEventListener('DOMContentLoaded', () => {
+    updateWheel();
+    setTimeout(resizeCanvas, 300); // Dar tiempo al navegador móvil
+});
+
 participantsInput.addEventListener('input', updateWheel);
 spinBtn.addEventListener('click', spin);
-
-// Inicialización
-resizeCanvas(); // Esto ajusta el tamaño nada más cargar
