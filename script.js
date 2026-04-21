@@ -4,6 +4,8 @@ const spinBtn = document.getElementById('spinBtn');
 const participantsInput = document.getElementById('participants');
 const participantCount = document.getElementById('participantCount');
 const winnerModal = document.getElementById('winnerModal');
+const cardPack = document.getElementById('cardPack');
+const revealedCard = document.getElementById('revealedCard');
 const speedInput = document.getElementById('speed');
 
 let names = [];
@@ -85,21 +87,32 @@ function determineWinner() {
     const winner = names[index >= 0 ? index : 0];
     
     document.getElementById('winnerName').innerText = winner.toUpperCase();
+    
+    // Resetear vistas del modal
     winnerModal.style.display = 'flex';
-    document.getElementById('cardPack').style.display = 'flex';
-    document.getElementById('revealedCard').style.display = 'none';
+    cardPack.style.display = 'flex';
+    cardPack.classList.remove('ripping');
+    revealedCard.style.display = 'none';
 }
 
-document.getElementById('cardPack').onclick = function() {
-    this.style.display = 'none';
-    document.getElementById('revealedCard').style.display = 'flex';
+// Lógica de apertura épica
+cardPack.onclick = function() {
+    cardPack.classList.add('ripping');
+    setTimeout(() => {
+        cardPack.style.display = 'none';
+        revealedCard.style.display = 'flex';
+    }, 600);
 };
 
-function closeModal() { winnerModal.style.display = 'none'; }
+function closeModal() { 
+    winnerModal.style.display = 'none'; 
+}
 
 window.addEventListener('resize', resize);
 participantsInput.addEventListener('input', updateWheel);
 spinBtn.addEventListener('click', spin);
 
-// Inicio
-setTimeout(resize, 200);
+// Inicio retardado para asegurar que el ancho del móvil sea correcto
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(resize, 300);
+});
